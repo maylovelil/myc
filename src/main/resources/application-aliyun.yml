@@ -1,0 +1,76 @@
+logging:
+    config: classpath:logback/logback-dev.xml
+    level:
+        org:
+            springframework: info
+        root: debug
+    path: /data/crm/
+#没有该处配置在springboot2的环境下,tk的工具类SpringBootBindUtil会报反射错误
+#tk的工具类SpringBootBindUtil在springboot2和springboot1环境下运行不同的反射逻辑
+mapper:
+    mappers: com.myc.comm.base.MycBaseMapper
+    mappers.identity: MYSQL
+    mappers.not-empty: false
+    mappers.style: camelhump
+mybatis:
+    configuration:
+        map-underscore-to-camel-case: true #开启驼峰映射
+    mapperLocations: classpath:mapper/**Mapper.xml
+    typeAliasesPackage: com.myc.entity
+pagehelper:
+    helperDialect: mysql
+    params: count=countSql
+    reasonable: true
+    supportMethodsArguments: true
+server:
+    port: 8989
+    servlet:
+        context-path: /myc #springboot2.0之前配置：server.context-path
+
+spring:
+    application:
+        name: myc
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        filters: stat,wall,log4j
+        initialSize: 5
+        logSlowSql: true
+        maxActive: 20
+        maxWait: 60000
+        minEvictableIdleTimeMillis: 300000
+        minIdle: 5
+        testOnBorrow: false
+        testOnReturn: false
+        testWhileIdle: true
+        timeBetweenEvictionRunsMillis: 60000
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://127.0.0.1:3306/sys?rewriteBatchedStatements=true&characterEncoding=utf-8&allowMultiQueries=true
+        username: root
+        password: MaYong_123456
+        validationQuery: SELECT 1 FROM DUAL
+    thymeleaf:
+        cache: false # 这个开发配置为false，避免改了模板还要重启服务器
+        check-template-location: true # 这个是配置模板路径的，默认就是templates，可不用配置
+        content-type: text/html # 这个可以不配置，检查模板位置
+        encoding: UTF-8
+        mode: LEGACYHTML5 # 模板的模式 (使用非严格的html5解析)
+        prefix: classpath:/templates/
+        suffix: .html
+    redis:
+          host: 127.0.0.1 # Redis服务器地址
+          port: 6379 # Redis服务器连接端口
+          timeout: 0 # 连接超时时间（毫秒）
+          password: 123456
+          pool:
+              max-total: 500 # 连接池最大连接数（使用负值表示没有限制）
+              max-idle: 50 # 连接池中的最大空闲连接
+              max-wait: -1 # 连接池最大阻塞等待时间（使用负值表示没有限制）
+              min-idle: 10  # 连接池中的最小空闲连接
+              time-out: 5000
+              testOnBorrow: true #当调用borrow Object方法时，是否进行有效性检查
+              testOnReturn: true #当调用return Object方法时，是否进行有效性检查
+cookie:
+    domain: 118.190.146.230
+redisson:
+    address: redis://127.0.0.1:6379
+    password:

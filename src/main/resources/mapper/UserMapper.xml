@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myc.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.myc.entity.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="enable" jdbcType="INTEGER" property="enable" />
+  </resultMap>
+
+  <resultMap id="roleList" type="com.myc.entity.Role">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="roleDesc" jdbcType="VARCHAR" property="roledesc" />
+    <result column="roleName" jdbcType="VARCHAR" property="roleName" />
+  </resultMap>
+
+  <resultMap type="com.myc.vo.UserVo" id="userAndRoleResultMap" extends="BaseResultMap">
+    <!-- 一个用户对应多个订单 -->
+    <collection property="roleList" ofType="com.myc.entity.Role">
+      <result column="roleDesc" jdbcType="VARCHAR" property="roledesc" />
+      <result column="roleName" jdbcType="VARCHAR" property="roleName" />
+    </collection>
+  </resultMap>
+
+  <select id="selectUserVoByUserId" resultMap="userAndRoleResultMap">
+      select
+        u.*,
+        r.roleDesc,
+        r.roleName
+      from user u left join user_role ur on u.id = ur.userId left join role r on r.id = ur.roleId
+      where u.id = #{userId}
+  </select>
+</mapper>

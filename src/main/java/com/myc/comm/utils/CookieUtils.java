@@ -2,25 +2,17 @@ package com.myc.comm.utils;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.myc.comm.config.ShiroConfig;
-import com.myc.comm.config.YmlConfig;
-import com.myc.controller.WebController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 /**
  * @Description:
  * @author: :MaYong
@@ -30,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 public class CookieUtils {
     private static final Logger logger = LoggerFactory.getLogger(CookieUtils.class);
 
-    @Value("${myc.cookie.domain}")
+    @Value("${myc.props.cookie.domain}")
     private String domain;
 
     private static String domain2;

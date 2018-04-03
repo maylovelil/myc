@@ -6,6 +6,7 @@
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="enable" jdbcType="INTEGER" property="enable" />
+    <result column="verify_count" jdbcType="INTEGER" property="verifyCount" />
   </resultMap>
 
   <resultMap id="roleList" type="com.myc.entity.Role">

@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <title>登录</title>
-    <meta name="keywords" content="木叶草">
-    <meta name="description" content="木叶草">
+    <title>木叶草 - 登录</title>
+    <meta name="keywords" content="木叶草,后台管理系统">
+    <meta name="description" content="木叶草,后台管理系统">
 
     <link rel="shortcut icon" href="favicon.ico">
     <link th:href="@{/css/bootstrap.min.css?v=3.3.6}" href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
@@ -43,7 +43,7 @@
                 <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
 
 
-                <p class="text-muted text-center"> <a href="login.html#"><small>忘记密码了？</small></a> | <a href="register.html">注册一个新账号</a>
+                <p class="text-muted text-center"> <a href="login.html#"><small>忘记密码了？</small></a> | <a th:href="@{/register}" href="register.html">注册一个新账号</a>
                 </p>
 
             </form>

@@ -1,5 +1,6 @@
 package com.myc.comm.shiro;
 
+import com.myc.comm.constans.CommCons;
 import com.myc.comm.jwt.JWTToken;
 import com.myc.comm.utils.JWTUtils;
 import com.myc.entity.Resources;
@@ -90,10 +91,14 @@ public class MyRealm extends AuthorizingRealm {
         if (user == null) {
             throw new UnknownAccountException("用户名不存在");
         }
-        if (0 == user.getEnable()) {
+        if (CommCons.TWO == user.getEnable()) {
             throw new LockedAccountException(); // 帐号锁定
         }
+        if(CommCons.FIVE.compareTo(user.getVerifyCount()) <= 0){
+            throw new ExcessiveAttemptsException("验证未通过错误次数过多");
+        }
         if (!JWTUtils.verify(jwtToken, user)) {//校验密码是否正确
+            saveVerifyCount(user.getId(),user.getVerifyCount()+CommCons.ONE);
             throw new AuthenticationException("用户名或者密码错误");
         }
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(jwtToken, jwtToken, username);
@@ -102,7 +107,17 @@ public class MyRealm extends AuthorizingRealm {
         session.setAttribute(SessionEnum.SESSION_USER_ID.getValue() + "_" + user.getId(), user.getId());
         session.setAttribute(SessionEnum.SESSION_USER.getValue(), user);
         session.setAttribute(SessionEnum.SESSION_USER_ID.getValue(), user.getId());
+
+        //验证通过以后把验证次数清零
+        saveVerifyCount(user.getId(),CommCons.ZERO);
         return authenticationInfo;
+    }
+
+    private void saveVerifyCount(Integer userId,Integer verifyCount){
+        User userVerifyCount = new User();
+        userVerifyCount.setId(userId);
+        userVerifyCount.setVerifyCount(verifyCount);
+        userService.updateVerifyCount(userVerifyCount);
     }
 
 

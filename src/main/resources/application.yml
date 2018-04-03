@@ -76,6 +76,11 @@ redisson:
 #redisson.master-name=mymaster
 #redisson.password=xxxx
 #redisson.sentinel-addresses=10.47.91.83:26379,10.47.91.83:26380,10.47.91.83:26381
+
 myc:
-    cookie:
-        domain: localhost
+    props:
+      cookie.domain: localhost
+      verify.count: 5
+
+
+

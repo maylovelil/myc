@@ -4800,7 +4800,7 @@ body.modal-open {
 }
 
 .loginscreen.middle-box {
-    width: 300px;
+    width: 330px;
 }
 
 .loginColumns {
@@ -4821,6 +4821,7 @@ body.modal-open {
     font-weight: 800;
     letter-spacing: -10px;
     margin-bottom: 0px;
+    margin-left: -15px;
 }
 
 .middle-box h1 {

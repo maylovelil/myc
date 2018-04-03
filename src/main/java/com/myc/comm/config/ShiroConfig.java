@@ -122,6 +122,7 @@ public class ShiroConfig {
         }*/
         filterChainDefinitionMap.put("/logout","logout");
         filterChainDefinitionMap.put("/login","anon");
+        filterChainDefinitionMap.put("/register","anon");
         filterChainDefinitionMap.put("/","anon");
         filterChainDefinitionMap.put("/**", "jwt");
 

@@ -24,4 +24,8 @@ public interface UserService extends BaseService<User> {
 
     UserVo selectUserVoByUserId(Integer userId);
 
+    Integer updateVerifyCount(User record);
+
+
+
 }

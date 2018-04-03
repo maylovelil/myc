@@ -19,6 +19,12 @@ public class User implements Serializable{
     private Integer enable;
 
     /**
+     * 验证次数
+     */
+    @Column(name = "verify_count",columnDefinition = "INT default 1")
+    private Integer verifyCount;
+
+    /**
      * @return id
      */
     public Integer getId() {
@@ -78,6 +84,14 @@ public class User implements Serializable{
         this.enable = enable;
     }
 
+    public Integer getVerifyCount() {
+        return verifyCount;
+    }
+
+    public void setVerifyCount(Integer verifyCount) {
+        this.verifyCount = verifyCount;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -85,6 +99,7 @@ public class User implements Serializable{
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", enable=" + enable +
+                ", verifyCount=" + verifyCount +
                 '}';
     }
 }

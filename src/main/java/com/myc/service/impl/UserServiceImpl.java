@@ -1,9 +1,12 @@
 package com.myc.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.myc.comm.base.BaseService;
 import com.myc.comm.base.BaseServiceImpl;
+import com.myc.comm.constans.CommCons;
+import com.myc.comm.utils.YmlConfigUtils;
 import com.myc.entity.User;
 import com.myc.entity.UserRole;
 import com.myc.mapper.UserMapper;
@@ -79,5 +82,20 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
     public UserVo selectUserVoByUserId(Integer userId){
         return  userMapper.selectUserVoByUserId(userId);
+    }
+    @Override
+    public Integer updateVerifyCount(User record){
+        try {
+            if(null == record) return CommCons.ZERO;
+            if(null == record.getVerifyCount()) record.setVerifyCount(CommCons.ZERO);
+            if(Integer.valueOf(YmlConfigUtils.getConfigByKey(CommCons.VERIFY_COUNT)).compareTo(record.getVerifyCount())==0) {
+                record.setVerifyCount(CommCons.ZERO);
+                record.setEnable(CommCons.TWO);
+            }
+            return  mapper.updateByPrimaryKeySelective(record);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

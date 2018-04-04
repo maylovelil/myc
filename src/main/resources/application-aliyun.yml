@@ -69,8 +69,15 @@ spring:
               time-out: 5000
               testOnBorrow: true #当调用borrow Object方法时，是否进行有效性检查
               testOnReturn: true #当调用return Object方法时，是否进行有效性检查
-myc:
-    cookiedomain: 118.190.146.230
 redisson:
     address: redis://127.0.0.1:6379
     password:
+#哨兵模式
+#redisson.master-name=mymaster
+#redisson.password=xxxx
+#redisson.sentinel-addresses=10.47.91.83:26379,10.47.91.83:26380,10.47.91.83:26381
+
+myc:
+    props:
+      cookie.domain: 118.190.146.230
+      verify.count: 5

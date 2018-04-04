@@ -1,10 +1,10 @@
 logging:
-    config: classpath:logback/logback-dev.xml
+    config: classpath:logback/logback-prod.xml
     level:
         org:
             springframework: info
         root: debug
-    path: /data/crm/
+    path: /data/logs/myc/
 #没有该处配置在springboot2的环境下,tk的工具类SpringBootBindUtil会报反射错误
 #tk的工具类SpringBootBindUtil在springboot2和springboot1环境下运行不同的反射逻辑
 mapper:

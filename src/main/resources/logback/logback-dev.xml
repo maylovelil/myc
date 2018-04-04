@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_PATH" value="/data/crm" />
+    <property name="LOG_PATH" value="/data/myc" />
 
     <appender name="FILENAME"
               class="ch.qos.logback.core.rolling.RollingFileAppender">

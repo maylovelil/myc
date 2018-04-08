@@ -11,5 +11,5 @@ import com.myc.entity.UserRole;
  */
 public interface UserRoleService extends BaseService<UserRole> {
 
-    public void addUserRole(UserRole userRole);
+    public void addUserRole(Integer userId,String roleIds);
 }

@@ -9,16 +9,12 @@
     <result column="verify_count" jdbcType="INTEGER" property="verifyCount" />
   </resultMap>
 
-  <resultMap id="roleList" type="com.myc.entity.Role">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="roleDesc" jdbcType="VARCHAR" property="roledesc" />
-    <result column="roleName" jdbcType="VARCHAR" property="roleName" />
-  </resultMap>
 
   <resultMap type="com.myc.vo.UserVo" id="userAndRoleResultMap" extends="BaseResultMap">
     <!-- 一个用户对应多个订单 -->
     <collection property="roleList" ofType="com.myc.entity.Role">
-      <result column="roleDesc" jdbcType="VARCHAR" property="roledesc" />
+      <result column="role_id" jdbcType="VARCHAR" property="id" />
+      <result column="roleDesc" jdbcType="VARCHAR" property="roleDesc" />
       <result column="roleName" jdbcType="VARCHAR" property="roleName" />
     </collection>
   </resultMap>
@@ -26,8 +22,9 @@
   <select id="selectUserVoByUserId" resultMap="userAndRoleResultMap">
       select
         u.*,
-        r.roleDesc,
-        r.roleName
+        r.id role_id,
+        r.roleName,
+        r.roleDesc
       from user u left join user_role ur on u.id = ur.userId left join role r on r.id = ur.roleId
       where u.id = #{userId}
   </select>

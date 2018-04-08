@@ -10,7 +10,15 @@ public class UserDto {
     private String username;
     private String firstPassword;
     private String secondPassword;
+    private String roleIds;
 
+    public String getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(String roleIds) {
+        this.roleIds = roleIds;
+    }
 
     public Integer getId() {
         return id;

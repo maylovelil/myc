@@ -15,6 +15,8 @@ public class UserVo {
     private String username;
     private String password;
     private Integer enable;
+    private Integer verifyCount;
+
     private List<Role> roleList = Lists.newArrayList();
 
     public Integer getId() {
@@ -55,5 +57,13 @@ public class UserVo {
 
     public void setRoleList(List<Role> roleList) {
         this.roleList = roleList;
+    }
+
+    public Integer getVerifyCount() {
+        return verifyCount;
+    }
+
+    public void setVerifyCount(Integer verifyCount) {
+        this.verifyCount = verifyCount;
     }
 }

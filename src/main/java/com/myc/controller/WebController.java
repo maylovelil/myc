@@ -1,17 +1,23 @@
 package com.myc.controller;
 
+import com.google.common.base.Joiner;
 import com.myc.comm.ResponseBean;
 import com.myc.comm.Result;
 import com.myc.comm.config.RedisConfig;
 import com.myc.comm.constans.CommCons;
+import com.myc.comm.constans.RoleCons;
 import com.myc.comm.jwt.JWTToken;
 import com.myc.comm.utils.MD5Utils;
 import com.myc.dto.UserDto;
+import com.myc.entity.Role;
 import com.myc.entity.User;
+import com.myc.entity.UserRole;
+import com.myc.service.UserRoleService;
 import com.myc.service.UserService;
 import com.myc.comm.utils.CookieUtils;
 import com.myc.comm.utils.JWTUtils;
 import com.myc.comm.utils.ResultUtils;
+import com.myc.vo.UserVo;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -34,6 +40,8 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Description:
@@ -47,6 +55,9 @@ public class WebController {
     private static final Logger logger = LoggerFactory.getLogger(WebController.class);
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @GetMapping(value = {"login", ""})
     public String login() {
@@ -170,6 +181,8 @@ public class WebController {
         user.setEnable(CommCons.ONE);
         user.setVerifyCount(CommCons.ZERO);
         int flag = userService.saveSelective(user);
+        userDto.setRoleIds("3,1");
+        userRoleService.addUserRole(user.getId(),userDto.getRoleIds());
         if (flag <= 0) {
             redirectAttributes.addFlashAttribute("message", "注册失败，请重试");
             return "redirect:/register";
@@ -192,8 +205,13 @@ public class WebController {
     }
 
 
-    @RequestMapping(value = {"index"})
-    public String index() {
+    @RequestMapping(value={"index"})
+    public String index(Model model){
+        Integer userId = Integer.valueOf(JWTUtils.getUserId(JWTUtils.getJWTToken()));
+        UserVo userVos = userService.selectUserVoByUserId(userId);
+        String roleNames = Joiner.on(",").join(userVos.getRoleList().stream().map(Role:: getRoledesc).collect(Collectors.toSet()));
+       model.addAttribute("user",userVos);
+       model.addAttribute("roleNames",roleNames);
         return "user/index";
     }
 

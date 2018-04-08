@@ -22,10 +22,8 @@ public interface UserService extends BaseService<User> {
 
     public List<User> selectAll();
 
-    UserVo selectUserVoByUserId(Integer userId);
+    UserVo  selectUserVoByUserId(Integer userId);
 
     Integer updateVerifyCount(User record);
-
-
 
 }

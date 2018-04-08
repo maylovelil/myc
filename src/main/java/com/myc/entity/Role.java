@@ -10,7 +10,7 @@ public class Role implements Serializable{
     private Integer id;
 
     @Column(name = "roleDesc")
-    private String roledesc;
+    private String roleDesc;
     @Transient
     private Integer selected;
 
@@ -43,14 +43,14 @@ public class Role implements Serializable{
      * @return roleDesc
      */
     public String getRoledesc() {
-        return roledesc;
+        return roleDesc;
     }
 
     /**
      * @param roledesc
      */
     public void setRoledesc(String roledesc) {
-        this.roledesc = roledesc;
+        this.roleDesc = roledesc;
     }
 
     public Integer getSelected() {

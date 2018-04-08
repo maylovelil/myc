@@ -25,23 +25,23 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = {Exception.class})
-    public void addUserRole(UserRole userRole) {
+    public void addUserRole(Integer userId,String roleIds) {
         //删除
         Example example = new Example(UserRole.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("userid", userRole.getUserid());
+        criteria.andEqualTo("userid", userId);
         mapper.deleteByExample(example);
         //添加
-        String[] roleids = userRole.getRoleid().split(",");
-        for (String roleId : roleids) {
+        String[] rds = roleIds.split(",");
+        for (String roleId : rds) {
             UserRole u = new UserRole();
-            u.setUserid(userRole.getUserid());
-            u.setRoleid(roleId);
+            u.setUserid(userId);
+            u.setRoleid(Integer.valueOf(roleId));
             mapper.insert(u);
         }
         //更新当前登录的用户的权限缓存
-        List<Integer> userid = new ArrayList<Integer>();
-        userid.add(userRole.getUserid());
-        myRealm.clearUserAuthByUserId(userid);
+        List<Integer> userIds = new ArrayList<Integer>();
+        userIds.add(userId);
+        myRealm.clearUserAuthByUserId(userIds);
     }
 }

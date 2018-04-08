@@ -10,7 +10,7 @@ public class UserRole implements Serializable{
     private Integer userid;
 
     @Column(name = "roleId")
-    private String roleid;
+    private Integer roleid;
 
     /**
      * @return userId
@@ -26,11 +26,11 @@ public class UserRole implements Serializable{
         this.userid = userid;
     }
 
-    public String getRoleid() {
+    public Integer getRoleid() {
         return roleid;
     }
 
-    public void setRoleid(String roleid) {
+    public void setRoleid(Integer roleid) {
         this.roleid = roleid;
     }
 }

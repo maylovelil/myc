@@ -13,7 +13,11 @@ public class CommCons {
     public static final Integer FOUR = 4;
     public static final Integer FIVE = 5;
 
+    //cookie的domain
     public static final String COOKIE_DOMAIN = "cookie.domain";
+    //登录错误次数
     public static final String VERIFY_COUNT = "verify.count";
+    //逗号
+    public static final String  COMMA = ",";
 
 }

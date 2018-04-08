@@ -6,8 +6,12 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.myc.comm.jwt.JWTToken;
 import com.myc.entity.User;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
@@ -31,7 +35,7 @@ public class JWTUtils {
             Algorithm algorithm = Algorithm.HMAC256(user.getPassword());
             JWTVerifier verifier = JWT.require(algorithm)
                     .withClaim("username", user.getUsername())
-                    .withClaim("userId",user.getId())
+                    .withClaim("userId",String.valueOf(user.getId()))
                     .withClaim("user",JSONObject.toJSONString(user))
                     .build();
             DecodedJWT jwt = verifier.verify(jwtToken);
@@ -92,7 +96,8 @@ public class JWTUtils {
             // 附带username信息
             return JWT.create()
                     .withClaim("username", user.getUsername())
-                    .withClaim("userId",user.getId())
+                    //这里保存的所有信息全部使用String类型，否者在获取的时候asString处理错误
+                    .withClaim("userId",String.valueOf(user.getId()))
                     .withClaim("user",JSONObject.toJSONString(user))
                     .withExpiresAt(date)
                     .sign(algorithm);
@@ -101,7 +106,16 @@ public class JWTUtils {
         }
     }
 
-    public static void main(String[] args) {
+    public static String getJWTToken(){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        return CookieUtils.getCookieValue(request, JWTToken.AUTH_TOKEN);
+    }
+
+    public static String getJWTToken(HttpServletRequest request){
+        return CookieUtils.getCookieValue(request,JWTToken.AUTH_TOKEN);
+    }
+
+/*    public static void main(String[] args) {
         User user = new User();
         user.setUsername("123");
         user.setPassword("234");
@@ -109,5 +123,5 @@ public class JWTUtils {
         String token = JWTUtils.sign(user);
         System.out.println(JWTUtils.getUserId(token));
         System.out.println(JWTUtils.verify(token,user));
-    }
+    }*/
 }

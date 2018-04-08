@@ -29,20 +29,22 @@ public class ExceptionController {
    // @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(ShiroException.class)
     public @ResponseBody Result handle401(ShiroException e) {
+        logger.info("系统异常：{}",e);
         return  ResultUtils.ERROR("没有操作权限",HttpStatus.UNAUTHORIZED);
     }
 
     // 捕捉UnauthorizedException
    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedException.class)
-    public void handle401(HttpServletResponse response) {
+    public void handle401(HttpServletResponse response,UnauthorizedException e) {
+       logger.info("系统异常：{}",e);
        try {
            PrintWriter out = null;
            response.setContentType("text/html;charset=UTF-8");
            out = response.getWriter();
            out.print("<script language=\"javascript\">alert('没有权限');</script>");
-       } catch (IOException e) {
-           e.printStackTrace();
+       } catch (IOException ie) {
+           ie.printStackTrace();
        }
    }
 
@@ -50,14 +52,15 @@ public class ExceptionController {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String globalException(HttpServletRequest request, Throwable ex, HttpServletResponse response) {
+        logger.info("系统异常：{}",ex);
         PrintWriter out = null;
         try {
             response.setContentType("text/html;charset=UTF-8");
             out = response.getWriter();
             out.print("<script language=\"javascript\">alert('系统异常');</script>");
             return "user/login";
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.info("系统异常：{}",ex);
         }
         return "user/login";
         //return new ResponseBean(getStatus(request).value(), ex.getMessage(), null);

@@ -17,40 +17,23 @@ public class Role implements Serializable{
     @Column(name = "roleName")
     private String roleName;
 
-    public String getRoleName() {
-        return roleName;
-    }
+    @Transient
+    private Integer userId;
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
-    /**
-     * @return id
-     */
     public Integer getId() {
         return id;
     }
 
-    /**
-     * @param id
-     */
     public void setId(Integer id) {
         this.id = id;
     }
 
-    /**
-     * @return roleDesc
-     */
-    public String getRoledesc() {
+    public String getRoleDesc() {
         return roleDesc;
     }
 
-    /**
-     * @param roledesc
-     */
-    public void setRoledesc(String roledesc) {
-        this.roleDesc = roledesc;
+    public void setRoleDesc(String roleDesc) {
+        this.roleDesc = roleDesc;
     }
 
     public Integer getSelected() {
@@ -59,5 +42,21 @@ public class Role implements Serializable{
 
     public void setSelected(Integer selected) {
         this.selected = selected;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

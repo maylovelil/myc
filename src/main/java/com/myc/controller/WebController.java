@@ -3,25 +3,21 @@ package com.myc.controller;
 import com.google.common.base.Joiner;
 import com.myc.comm.ResponseBean;
 import com.myc.comm.Result;
-import com.myc.comm.config.RedisConfig;
 import com.myc.comm.constans.CommCons;
-import com.myc.comm.constans.RoleCons;
 import com.myc.comm.jwt.JWTToken;
+import com.myc.comm.utils.CookieUtils;
+import com.myc.comm.utils.JWTUtils;
 import com.myc.comm.utils.MD5Utils;
+import com.myc.comm.utils.ResultUtils;
 import com.myc.dto.UserDto;
 import com.myc.entity.Role;
 import com.myc.entity.User;
-import com.myc.entity.UserRole;
 import com.myc.service.UserRoleService;
 import com.myc.service.UserService;
-import com.myc.comm.utils.CookieUtils;
-import com.myc.comm.utils.JWTUtils;
-import com.myc.comm.utils.ResultUtils;
 import com.myc.vo.UserVo;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -36,11 +32,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -78,31 +71,31 @@ public class WebController {
         user.setUsername(userName);
         user.setPassword(MD5Utils.md5(MD5Utils.md5(password)));
         User userBean = userService.queryOne(user);
-        if (userBean != null){
-            if(null != userBean.getVerifyCount()){
-                if(CommCons.FIVE.compareTo(userBean.getVerifyCount()) <= 0){
+        if (userBean != null) {
+            if (null != userBean.getVerifyCount()) {
+                if (CommCons.FIVE.compareTo(userBean.getVerifyCount()) <= 0) {
                     redirectAttributes.addFlashAttribute("message", "验证未通过错误次数过多,请联系管理员解锁");
                     return "redirect:/login";
                 }
             }
-        }else{
+        } else {
             User verifyUser = userService.selectByUsername(userName);
             User userVerifyCount = new User();
-            if(verifyUser != null) {
-                if(CommCons.TWO == verifyUser.getEnable()){
+            if (verifyUser != null) {
+                if (CommCons.TWO == verifyUser.getEnable()) {
                     redirectAttributes.addFlashAttribute("message", "账户已经锁定，请联系管理员解锁");
                     return "redirect:/login";
                 }
                 userVerifyCount.setId(verifyUser.getId());
-                if(null != verifyUser.getVerifyCount()){
-                    if(CommCons.FIVE.compareTo(verifyUser.getVerifyCount()) <= 0){
+                if (null != verifyUser.getVerifyCount()) {
+                    if (CommCons.FIVE.compareTo(verifyUser.getVerifyCount()) <= 0) {
                         redirectAttributes.addFlashAttribute("message", "验证未通过错误次数过多");
                         return "redirect:/login";
-                    }else {
-                        userVerifyCount.setVerifyCount(verifyUser.getVerifyCount()+CommCons.ONE);
+                    } else {
+                        userVerifyCount.setVerifyCount(verifyUser.getVerifyCount() + CommCons.ONE);
                         userService.updateVerifyCount(userVerifyCount);
                     }
-                }else{
+                } else {
                     userVerifyCount.setVerifyCount(CommCons.ONE);
                     userService.updateVerifyCount(userVerifyCount);
                 }
@@ -140,7 +133,7 @@ public class WebController {
             //通过处理Shiro的运行时AuthenticationException就可以控制用户登录失败或密码错误时的情景
             logger.info("对用户[" + userName + "]进行登录验证..验证未通过,堆栈轨迹如下");
             redirectAttributes.addFlashAttribute("message", "用户名或密码不正确");
-        }catch (TooManyResultsException tm){
+        } catch (TooManyResultsException tm) {
             logger.info("对用户[" + userName + "]进行登录验证..验证未通过,堆栈轨迹如下");
             redirectAttributes.addFlashAttribute("message", "系统存在多个相同用户名，暂时不允许您登录");
         }
@@ -161,7 +154,7 @@ public class WebController {
     }
 
 
-    @PostMapping(value = "register",produces = "application/json;charset=utf-8")
+    @PostMapping(value = "register", produces = "application/json;charset=utf-8")
     public String register(UserDto userDto,
                            Model model,
                            RedirectAttributes redirectAttributes,
@@ -171,7 +164,7 @@ public class WebController {
             return "redirect:/register";
         }
         User verifyUser = userService.selectByUsername(userDto.getUsername());
-        if(null != verifyUser){
+        if (null != verifyUser) {
             redirectAttributes.addFlashAttribute("message", "该用户已被占用");
             return "redirect:/register";
         }
@@ -182,7 +175,7 @@ public class WebController {
         user.setVerifyCount(CommCons.ZERO);
         int flag = userService.saveSelective(user);
         userDto.setRoleIds("3,1");
-        userRoleService.addUserRole(user.getId(),userDto.getRoleIds());
+        userRoleService.addUserRole(user.getId(), userDto.getRoleIds());
         if (flag <= 0) {
             redirectAttributes.addFlashAttribute("message", "注册失败，请重试");
             return "redirect:/register";
@@ -195,9 +188,9 @@ public class WebController {
         Subject currentUser = SecurityUtils.getSubject();
         JWTToken jwtToken = new JWTToken(sign);
         currentUser.login(jwtToken);
-        if(currentUser.isAuthenticated()){
+        if (currentUser.isAuthenticated()) {
             return "redirect:/index";
-        }else{
+        } else {
             redirectAttributes.addFlashAttribute("message", "请登录");
             jwtToken.clear();
             return "redirect:/login";
@@ -205,13 +198,13 @@ public class WebController {
     }
 
 
-    @RequestMapping(value={"index"})
-    public String index(Model model){
+    @RequestMapping(value = {"index"})
+    public String index(Model model) {
         Integer userId = Integer.valueOf(JWTUtils.getUserId(JWTUtils.getJWTToken()));
         UserVo userVos = userService.selectUserVoByUserId(userId);
-        String roleNames = Joiner.on(",").join(userVos.getRoleList().stream().map(Role:: getRoledesc).collect(Collectors.toSet()));
-       model.addAttribute("user",userVos);
-       model.addAttribute("roleNames",roleNames);
+        String roleNames = Joiner.on(",").join(userVos.getRoleList().stream().map(Role::getRoleDesc).collect(Collectors.toSet()));
+        model.addAttribute("user", userVos);
+        model.addAttribute("roleNames", roleNames);
         return "user/index";
     }
 

@@ -3,14 +3,17 @@ package com.myc.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.myc.comm.base.BaseService;
+import com.google.common.collect.Lists;
 import com.myc.comm.base.BaseServiceImpl;
 import com.myc.comm.constans.CommCons;
+import com.myc.comm.utils.BeanUtils;
 import com.myc.comm.utils.YmlConfigUtils;
+import com.myc.dto.UserDto;
+import com.myc.entity.Role;
 import com.myc.entity.User;
 import com.myc.entity.UserRole;
+import com.myc.mapper.RoleMapper;
 import com.myc.mapper.UserMapper;
-import com.myc.mapper.UserRoleMapper;
 import com.myc.service.UserService;
 import com.myc.vo.UserVo;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import tk.mybatis.mapper.util.StringUtil;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description:
@@ -31,6 +35,9 @@ import java.util.List;
 public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
     @Resource
     UserMapper userMapper;
+    @Resource
+    RoleMapper roleMapper;
+
     @Override
     public PageInfo<User> selectByPage(User user, int start, int length) {
         int page = start / length + 1;
@@ -75,27 +82,62 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         mapper.deleteByExample(example);
     }
 
-    public List<User> selectAll(){
-        return  userMapper.selectAll();
+    public List<User> selectAll() {
+        return userMapper.selectAll();
     }
 
     @Override
-    public UserVo selectUserVoByUserId(Integer userId){
-        return  userMapper.selectUserVoByUserId(userId);
+    public UserVo selectUserVoByUserId(Integer userId) {
+        return userMapper.selectUserVoByUserId(userId);
     }
+
     @Override
-    public Integer updateVerifyCount(User record){
+    public Integer updateVerifyCount(User record) {
         try {
-            if(null == record) return CommCons.ZERO;
-            if(null == record.getVerifyCount()) record.setVerifyCount(CommCons.ZERO);
-            if(Integer.valueOf(YmlConfigUtils.getConfigByKey(CommCons.VERIFY_COUNT)).compareTo(record.getVerifyCount())==0) {
+            if (null == record) return CommCons.ZERO;
+            if (null == record.getVerifyCount()) record.setVerifyCount(CommCons.ZERO);
+            if (Integer.valueOf(YmlConfigUtils.getConfigByKey(CommCons.VERIFY_COUNT)).compareTo(record.getVerifyCount()) == 0) {
                 record.setVerifyCount(CommCons.ZERO);
                 record.setEnable(CommCons.TWO);
             }
-            return  mapper.updateByPrimaryKeySelective(record);
+            return mapper.updateByPrimaryKeySelective(record);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    @Override
+    public List<UserVo> selectAllUserVo(UserDto userDto) {
+        List<User> userList = userMapper.selectAllUser(userDto);
+        if(userList != null){
+            return setRoleToUserVo(userList);
+        }else{
+            return  Lists.newArrayList();
+        }
+    }
+
+    private List<UserVo> setRoleToUserVo(List<User> userList) {
+        List<Integer> userIds = userList.stream().map(User::getId).collect(Collectors.toList());
+        List<Role> roles = roleMapper.queryRoleListByUserIds(userIds);
+        List<UserVo> userVoList = transferToVo(userList);
+        userVoList.forEach(userVo -> {
+            roles.forEach(role -> {
+                if(userVo.getId().equals(role.getUserId())){
+                    userVo.getRoleList().add(role);
+                }
+            });
+        });
+        return userVoList;
+    }
+
+    public List<UserVo> transferToVo(List<User> userList) {
+        List<UserVo> userVos = Lists.newArrayList();
+        userVos.addAll(userList.stream().map(user -> {
+            UserVo userVo = new UserVo();
+            BeanUtils.copyProperties(userVo,user);
+            return userVo;
+        }).collect(Collectors.toList()));
+        return userVos;
     }
 }

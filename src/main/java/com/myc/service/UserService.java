@@ -3,6 +3,7 @@ package com.myc.service;
 
 import com.github.pagehelper.PageInfo;
 import com.myc.comm.base.BaseService;
+import com.myc.dto.UserDto;
 import com.myc.entity.User;
 import com.myc.vo.UserVo;
 
@@ -25,5 +26,7 @@ public interface UserService extends BaseService<User> {
     UserVo  selectUserVoByUserId(Integer userId);
 
     Integer updateVerifyCount(User record);
+
+    List<UserVo>  selectAllUserVo(UserDto userDto);
 
 }

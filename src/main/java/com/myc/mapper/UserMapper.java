@@ -2,8 +2,10 @@ package com.myc.mapper;
 
 
 import com.myc.comm.base.MycBaseMapper;
+import com.myc.dto.UserDto;
 import com.myc.entity.User;
 import com.myc.vo.UserVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +16,6 @@ import java.util.List;
  */
 public interface UserMapper extends MycBaseMapper<User> {
     UserVo selectUserVoByUserId(Integer userId);
+
+    List<User>  selectAllUser(@Param("userDto") UserDto userDto);
 }

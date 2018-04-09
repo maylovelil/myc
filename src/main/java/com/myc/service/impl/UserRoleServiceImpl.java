@@ -40,8 +40,8 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
             mapper.insert(u);
         }
         //更新当前登录的用户的权限缓存
-        List<Integer> userIds = new ArrayList<Integer>();
-        userIds.add(userId);
-        myRealm.clearUserAuthByUserId(userIds);
+        List<Integer> userid = new ArrayList<Integer>();
+        userid.add(userId);
+        myRealm.clearUserAuthByUserId(userid);
     }
 }

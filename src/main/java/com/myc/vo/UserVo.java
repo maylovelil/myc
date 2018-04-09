@@ -1,9 +1,12 @@
 package com.myc.vo;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.myc.comm.constans.CommCons;
 import com.myc.entity.Role;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description:
@@ -16,6 +19,7 @@ public class UserVo {
     private String password;
     private Integer enable;
     private Integer verifyCount;
+    private String roleDesc;
 
     private List<Role> roleList = Lists.newArrayList();
 
@@ -65,5 +69,15 @@ public class UserVo {
 
     public void setVerifyCount(Integer verifyCount) {
         this.verifyCount = verifyCount;
+    }
+
+    public String getRoleDesc() {
+        return Joiner.on(CommCons.COMMA).join(roleList.stream()
+                .map(Role :: getRoleDesc)
+                .collect(Collectors.toSet()));
+    }
+
+    public void setRoleDesc(String roleDesc) {
+        roleDesc = roleDesc;
     }
 }

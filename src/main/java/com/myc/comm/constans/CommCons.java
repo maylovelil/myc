@@ -20,4 +20,8 @@ public class CommCons {
     //逗号
     public static final String  COMMA = ",";
 
+    public static final int pageNum = 1;
+
+    public static final int pageSize = 20;
+
 }

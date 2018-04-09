@@ -1,5 +1,7 @@
 package com.myc.dto;
 
+import com.myc.comm.constans.CommCons;
+
 /**
  * @Description:
  * @author: :MaYong
@@ -11,6 +13,9 @@ public class UserDto {
     private String firstPassword;
     private String secondPassword;
     private String roleIds;
+
+    private int pageNumber = CommCons.pageNum;
+    private int pageSize = CommCons.pageSize;
 
     public String getRoleIds() {
         return roleIds;
@@ -50,5 +55,21 @@ public class UserDto {
 
     public void setSecondPassword(String secondPassword) {
         this.secondPassword = secondPassword;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 }

@@ -34,7 +34,7 @@ public class ExceptionController {
     }
 
     // 捕捉UnauthorizedException
-   @ResponseStatus(HttpStatus.UNAUTHORIZED)
+   //@ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedException.class)
     public void handle401(HttpServletResponse response,UnauthorizedException e) {
        logger.info("系统异常：{}",e);

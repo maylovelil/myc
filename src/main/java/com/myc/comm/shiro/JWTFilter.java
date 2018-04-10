@@ -76,6 +76,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
                 this.executeLogin(request, response);
             } catch (Exception e) {
                 this.redirectUrl(request,response,this.getLoginUrl());
+                return  true;
             }
         }
         return true;
@@ -96,6 +97,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         if (httpServletRequest.getMethod().equals(RequestMethod.OPTIONS.name())) {
             httpServletResponse.setStatus(HttpStatus.OK.value());
             return false;
+
         }
         return super.preHandle(request, response);
     }

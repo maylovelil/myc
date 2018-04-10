@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.myc.comm.ResponseBean;
 import com.myc.comm.Result;
 import com.myc.comm.constans.CommCons;
+import com.myc.comm.constans.RoleCons;
 import com.myc.comm.jwt.JWTToken;
 import com.myc.comm.utils.CookieUtils;
 import com.myc.comm.utils.JWTUtils;
@@ -139,7 +140,6 @@ public class WebController {
         }
         //验证是否登录成功
         if (currentUser.isAuthenticated()) {
-            Session session = SecurityUtils.getSubject().getSession();
             logger.info("用户[" + userName + "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
             return "redirect:/index";
         } else {

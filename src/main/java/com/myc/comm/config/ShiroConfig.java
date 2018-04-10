@@ -6,16 +6,21 @@ import com.google.common.collect.Maps;
 import com.myc.comm.filter.MycFormAuthenticationFilter;
 import com.myc.comm.shiro.JWTFilter;
 import com.myc.comm.shiro.MyRealm;
+import com.myc.comm.shiro.MycDefaultSubjectFactory;
 import com.myc.comm.shiro.MycLogoutFilter;
 import com.myc.comm.utils.StringUtils;
 import com.myc.entity.Resources;
 import com.myc.service.ResourcesService;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
+import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.subject.SubjectContext;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
@@ -140,6 +145,10 @@ public class ShiroConfig {
         securityManager.setCacheManager(cacheManager());
         // 自定义session管理 使用redis
         securityManager.setSessionManager(sessionManager());
+        securityManager.setSubjectFactory(subjectFactory());
+        /*禁用使用Sessions 作为存储策略的实现，但它没有完全地禁用Sessions
+          所以需要配合context.setSessionCreationEnabled(false);*/
+        ((DefaultSessionStorageEvaluator)((DefaultSubjectDAO)securityManager.getSubjectDAO()).getSessionStorageEvaluator()).setSessionStorageEnabled(false);
         return securityManager;
     }
 
@@ -247,7 +256,19 @@ public class ShiroConfig {
     public DefaultWebSessionManager sessionManager() {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setSessionDAO(redisSessionDAO());
+        //去掉URL中的JSESSIONID
+        sessionManager.setSessionIdCookieEnabled(false);
+        sessionManager.setSessionIdUrlRewritingEnabled(false);
+        /*sessionManager通过sessionValidationSchedulerEnabled禁用掉会话调度器
+        因为我们禁用掉了会话，所以没必要再定期过期会话了*/
+        sessionManager.setSessionValidationSchedulerEnabled(false);
         return sessionManager;
+    }
+
+    @Bean
+    public DefaultWebSubjectFactory subjectFactory(){
+        MycDefaultSubjectFactory subjectFactory = new MycDefaultSubjectFactory();
+        return subjectFactory;
     }
 
 }

@@ -80,7 +80,7 @@ public class MyRealm extends AuthorizingRealm {
 
     //认证
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token){
         if (token.getCredentials() == null) {
             throw new AuthenticationException("token已失效");
         }
@@ -102,12 +102,6 @@ public class MyRealm extends AuthorizingRealm {
             throw new AuthenticationException("用户名或者密码错误");
         }
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(jwtToken, jwtToken, username);
-        // 当验证都通过后，把用户信息放在session里
-        Session session = SecurityUtils.getSubject().getSession();
-        session.setAttribute(SessionEnum.SESSION_USER_ID.getValue() + "_" + user.getId(), user.getId());
-        session.setAttribute(SessionEnum.SESSION_USER.getValue(), user);
-        session.setAttribute(SessionEnum.SESSION_USER_ID.getValue(), user.getId());
-
         //验证通过以后把验证次数清零
         saveVerifyCount(user.getId(),CommCons.ZERO);
         return authenticationInfo;

@@ -58,7 +58,6 @@ public class UserController {
     @PostMapping(value = "ajaxList")
     @Transactional(readOnly = true)
     public @ResponseBody ResultPage getAjaxList(Model model,@RequestBody UserDto userDto) {
-        PageHelper.startPage(userDto.getPageNumber(), userDto.getPageSize());
         List<UserVo> userList = userService.selectAllUserVo(userDto);
         PageInfo pageInfo = new PageInfo(userList);
         model.addAttribute("userList",pageInfo);

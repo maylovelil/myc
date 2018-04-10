@@ -109,6 +109,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public List<UserVo> selectAllUserVo(UserDto userDto) {
+        PageHelper.startPage(userDto.getPageNumber(), userDto.getPageSize());
         List<User> userList = userMapper.selectAllUser(userDto);
         if(userList != null){
             return setRoleToUserVo(userList);

@@ -108,17 +108,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public List<UserVo> selectAllUserVo(UserDto userDto) {
+    public PageInfo selectAllUserVoForPage(UserDto userDto) {
         PageHelper.startPage(userDto.getPageNumber(), userDto.getPageSize());
         List<User> userList = userMapper.selectAllUser(userDto);
-        if(userList != null){
-            return setRoleToUserVo(userList);
-        }else{
-            return  Lists.newArrayList();
-        }
+        return setRoleToUserVo(new PageInfo(userList));
     }
 
-    private List<UserVo> setRoleToUserVo(List<User> userList) {
+    private PageInfo setRoleToUserVo(PageInfo pageInfo) {
+        List<User> userList = (List<User>)pageInfo.getList();
         List<Integer> userIds = userList.stream().map(User::getId).collect(Collectors.toList());
         List<Role> roles = roleMapper.queryRoleListByUserIds(userIds);
         List<UserVo> userVoList = transferToVo(userList);
@@ -129,7 +126,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 }
             });
         });
-        return userVoList;
+        pageInfo.setList(userVoList);
+        return pageInfo;
     }
 
     public List<UserVo> transferToVo(List<User> userList) {

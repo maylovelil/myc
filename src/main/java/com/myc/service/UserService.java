@@ -27,6 +27,6 @@ public interface UserService extends BaseService<User> {
 
     Integer updateVerifyCount(User record);
 
-    List<UserVo>  selectAllUserVo(UserDto userDto);
+    PageInfo  selectAllUserVoForPage(UserDto userDto);
 
 }

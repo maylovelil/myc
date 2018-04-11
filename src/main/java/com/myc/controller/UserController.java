@@ -41,15 +41,13 @@ public class UserController {
     @Transactional(readOnly = true)
     @RequiresRoles(value = {RoleCons.ADMIN, RoleCons.ADMINISTRATOR}, logical = Logical.OR)
     @RequiresPermissions(value = "user:list", logical = Logical.AND)
-    public String getUserList(Model model,UserDto userDto) {
-        PageHelper.startPage(userDto.getPageNumber(), userDto.getPageSize());
-        List<UserVo> userList = userService.selectAllUserVo(userDto);
-        PageInfo pageInfo = new PageInfo(userList);
-        model.addAttribute("userList",pageInfo);
+    public String getUserList(Model model, UserDto userDto) {
+        PageInfo pageInfo = userService.selectAllUserVoForPage(userDto);
+        model.addAttribute("userList", pageInfo);
         PageHelper.clearPage();
-        if(pageInfo.getTotal()>2){
+        if (pageInfo.getTotal() > 2) {
             return "user/contacts_20";
-        }else{
+        } else {
             return "user/contacts";
         }
     }
@@ -57,14 +55,9 @@ public class UserController {
     @ApiOperation(value = "获取所有的用户信息", notes = "参数描述", code = 200, produces = "application/json")
     @PostMapping(value = "ajaxList")
     @Transactional(readOnly = true)
-    public @ResponseBody ResultPage getAjaxList(Model model,@RequestBody UserDto userDto) {
-        List<UserVo> userList = userService.selectAllUserVo(userDto);
-        PageInfo pageInfo = new PageInfo(userList);
-        model.addAttribute("userList",pageInfo);
-        ResultPage resultPage = new ResultPage();
-        resultPage.setTotal(pageInfo.getTotal());
-        resultPage.setRows(userList);
-        return resultPage;
+    public @ResponseBody ResultPage getAjaxList(Model model, UserDto userDto) {
+        PageInfo pageInfo = userService.selectAllUserVoForPage(userDto);
+        return ResultPage.sendOk(pageInfo);
     }
 
     @PostMapping("add")

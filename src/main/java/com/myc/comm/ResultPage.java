@@ -1,5 +1,6 @@
 package com.myc.comm;
 
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.http.HttpStatus;
 
@@ -54,5 +55,12 @@ public class ResultPage<T> implements Serializable
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public static ResultPage sendOk(PageInfo pageInfo){
+        ResultPage resultPage = new ResultPage();
+        resultPage.setTotal(pageInfo.getTotal());
+        resultPage.setRows(pageInfo.getList());
+        return resultPage;
     }
 }

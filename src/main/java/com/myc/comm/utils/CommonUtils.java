@@ -1,5 +1,7 @@
 package com.myc.comm.utils;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Random;
 
 /**
@@ -24,5 +26,13 @@ public class CommonUtils {
             sb.append(base.charAt(number));
         }
         return sb.toString();
+    }
+
+    public static boolean isAjax(ServletRequest request){
+        String header = ((HttpServletRequest) request).getHeader("X-Requested-With");
+        if("XMLHttpRequest".equalsIgnoreCase(header)){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 }

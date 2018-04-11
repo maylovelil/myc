@@ -17,6 +17,8 @@
     <link th:href="@{/css/plugins/bootstrap-table/bootstrap-table.min.css}"  href="css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
     <link th:href="@{/css/animate.css}"  href="css/animate.css" rel="stylesheet">
     <link th:href="@{/css/style.css?v=4.1.0}"  href="css/style.css?v=4.1.0" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <link th:href="@{/css/plugins/sweetalert/sweetalert.css}" href="css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     
 
 </head>
@@ -68,7 +70,10 @@
     <script th:src="@{/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js}"  src="js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
 
     <!-- Peity -->
-    <script th:src="@{/}"  src="js/demo/bootstrap-table-demo.js"></script>
+    <script th:src="@{/js/demo/bootstrap-table-demo.js}"  src="js/demo/bootstrap-table-demo.js"></script>
+
+    <!-- Sweet alert -->
+    <script  th:src="@{/js/plugins/sweetalert/sweetalert.min.js}" src="js/plugins/sweetalert/sweetalert.min.js"></script>
 
     <!--<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>-->
     <!--统计代码，可删除-->
@@ -103,7 +108,7 @@
                 queryParams: oTableInit.queryParams,//传递参数（*）
                 sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
                 pageNumber:1,                       //初始化加载第一页，默认第一页
-                pageSize: 20,                       //每页的记录行数（*）
+                pageSize: 10,                       //每页的记录行数（*）
                 pageList: [5,10, 25, 50, 100],        //可供选择的每页的行数（*）
                 search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
                 strictSearch: true,
@@ -113,9 +118,42 @@
                 clickToSelect: true,                //是否启用点击选中行
                 height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
                 uniqueId: "id",                     //每一行的唯一标识，一般为主键列
-                showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+                showToggle:false,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //是否显示详细视图
                 detailView: false,                   //是否显示父子表
+                contentType: "application/x-www-form-urlencoded",//不实用Ajax方式
+                //responseHandler: oTableInit.responseHandler,
+               /* ajaxOptions:{
+                    headers: {"Authorization",""}
+                },*/
+                onLoadSuccess:function (data) {
+                    if(data.status == 401){
+                        swal({
+                            title: "权限失效，请重新登录",
+                            text: "5秒后自动跳转",
+                            type: "warning",
+                            timer: 5000,
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "去登录",
+                            cancelButtonText:"取消",
+                            closeOnConfirm: false
+                        }, function () {
+                            window.location.reload();
+                        });
+                    }
+                },
+                /*onLoadError:function (data) {
+                    if(data.status == 500){
+                        swal({
+                            title: "权限失效，请重新登录",
+                            text: "2秒后自动关闭",
+                            timer: 2000,
+                            showConfirmButton: false
+                        })
+                    }
+                    window.location.reload();
+                },*/
                 columns: [{
                     checkbox: true
                 }, {
@@ -133,6 +171,20 @@
                 } ]
             });
         };
+
+        oTableInit.responseHandler = function(res) { //数据筛选
+            if (res) {
+                return {
+                    "rows" : res.list,
+                    "total" : res.total
+                };
+            } else {
+                return {
+                    "rows" : [],
+                    "total" : 0
+                };
+            }
+        }
 
         //得到查询的参数
         oTableInit.queryParams = function (params) {
@@ -155,12 +207,7 @@
         oInit.Init = function () {
             //初始化页面上面的按钮事件
             $("#btn_query").click(function(){
-                $("#tb_departments").bootstrapTable(
-                    "refresh",
-                    {
-                        url:"/myc/user/ajaxList"
-                    }
-                );
+                $("#tb_departments").bootstrapTable("refresh");
             });
         };
 

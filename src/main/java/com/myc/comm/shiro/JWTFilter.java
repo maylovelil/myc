@@ -1,6 +1,9 @@
 package com.myc.comm.shiro;
 
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.myc.comm.jwt.JWTToken;
+import com.myc.comm.utils.CommonUtils;
 import com.myc.comm.utils.CookieUtils;
 import com.myc.comm.utils.StringUtils;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
@@ -15,6 +18,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @Description: 定制了JWT加密方式 所以要扩展 BasicHttpAuthenticationFilter
@@ -24,6 +28,7 @@ import java.io.IOException;
 public class JWTFilter extends BasicHttpAuthenticationFilter {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * 判断用户是否想要登入。
      * 检测header里面是否包含Authorization字段即可
@@ -46,11 +51,11 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
      * 登录扩展判断
      */
     @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception{
+    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
         String authorization = httpServletRequest.getHeader(JWTToken.AUTH_TOKEN);
         String cookie_authorization = CookieUtils.getCookieValue(httpServletRequest, JWTToken.AUTH_TOKEN);
-        if(authorization == null){
+        if (authorization == null) {
             authorization = cookie_authorization;
         }
         JWTToken token = new JWTToken(authorization);
@@ -71,15 +76,35 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        if(isLoginAttempt(request,response)) {
+        if (isLoginAttempt(request, response)) {
             try {
                 this.executeLogin(request, response);
             } catch (Exception e) {
-                this.redirectUrl(request,response,this.getLoginUrl());
-                return  true;
+                return false;
             }
         }
         return true;
+    }
+
+    /**
+     * isAccessAllowed 返回false之后调用
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @Override
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws IOException {
+        if(CommonUtils.isAjax(request)){
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            Map<String,Integer> stringMap = Maps.newHashMap();
+            stringMap.put("status",HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write(JSONObject.toJSONString(stringMap));
+        }else{
+            WebUtils.issueRedirect(request, response,this.getLoginUrl());
+        }
+        return false;
     }
 
 
@@ -102,9 +127,10 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         return super.preHandle(request, response);
     }
 
-    private void redirectUrl(ServletRequest request, ServletResponse response,String url) {
+    private void redirectUrl(ServletRequest request, ServletResponse response, String url) {
         try {
-            WebUtils.issueRedirect(request,response,url);
+            //WebUtils.issueRedirect(request,response,url);
+            WebUtils.toHttp(response).sendRedirect(request.getServletContext().getContextPath() + this.getLoginUrl());
         } catch (IOException e) {
             logger.info("URL:{},跳转失败！");
         }

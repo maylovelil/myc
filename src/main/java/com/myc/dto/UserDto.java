@@ -9,7 +9,7 @@ import com.myc.comm.constans.CommCons;
  */
 public class UserDto {
     private Integer id;
-    private String username;
+    private String userName;
     private String firstPassword;
     private String secondPassword;
     private String roleIds;
@@ -33,12 +33,12 @@ public class UserDto {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getFirstPassword() {

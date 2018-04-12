@@ -66,13 +66,13 @@ public class MyRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         User user = JWTUtils.getUser(principalCollection.toString());
         Map<String, Object> map = new HashMap<>();
-        map.put("userid", user.getId());
+        map.put("userId", user.getId());
         UserVo userVo  = userService.selectUserVoByUserId(user.getId());
         List<Resources> resourcesList = resourcesService.loadUserResources(map);
         // 权限信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //添加用户的资源权限
-        info.addStringPermissions(resourcesList.stream().map(Resources :: getResurl).collect(Collectors.toSet()));
+        info.addStringPermissions(resourcesList.stream().map(Resources :: getResUrl).collect(Collectors.toSet()));
         //添加用户的角色权限
         info.addRoles(userVo.getRoleList().stream().map(Role :: getRoleName).collect(Collectors.toSet()));
         return info;

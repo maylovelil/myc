@@ -4,7 +4,6 @@ import com.google.common.base.Joiner;
 import com.myc.comm.ResponseBean;
 import com.myc.comm.Result;
 import com.myc.comm.constans.CommCons;
-import com.myc.comm.constans.RoleCons;
 import com.myc.comm.jwt.JWTToken;
 import com.myc.comm.utils.CookieUtils;
 import com.myc.comm.utils.JWTUtils;
@@ -23,7 +22,6 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +67,7 @@ public class WebController {
                           RedirectAttributes redirectAttributes,
                           HttpServletResponse response) {
         User user = new User();
-        user.setUsername(userName);
+        user.setUserName(userName);
         user.setPassword(MD5Utils.md5(MD5Utils.md5(password)));
         User userBean = userService.queryOne(user);
         if (userBean != null) {
@@ -163,14 +161,14 @@ public class WebController {
             redirectAttributes.addFlashAttribute("message", "两次输入的密码不一致，请重新输入");
             return "redirect:/register";
         }
-        User verifyUser = userService.selectByUsername(userDto.getUsername());
+        User verifyUser = userService.selectByUsername(userDto.getUserName());
         if (null != verifyUser) {
             redirectAttributes.addFlashAttribute("message", "该用户已被占用");
             return "redirect:/register";
         }
         User user = new User();
         user.setPassword(MD5Utils.md5(MD5Utils.md5(userDto.getFirstPassword())));
-        user.setUsername(userDto.getUsername());
+        user.setUserName(userDto.getUserName());
         user.setEnable(CommCons.ONE);
         user.setVerifyCount(CommCons.ZERO);
         int flag = userService.saveSelective(user);

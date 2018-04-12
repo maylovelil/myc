@@ -53,7 +53,7 @@ public class GraphqlUserController {
                             String name = dataFetchingEnvironment.getArgument("name");
                             User user = new User();
                             user.setId(id);
-                            user.setUsername(name);
+                            user.setUserName(name);
                             return userService.queryOne(user);
                         }).build()))
                 .build();

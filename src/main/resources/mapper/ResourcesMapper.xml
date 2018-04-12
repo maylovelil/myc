@@ -7,25 +7,25 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="resUrl" jdbcType="VARCHAR" property="resurl" />
+    <result column="res_url" jdbcType="VARCHAR" property="resUrl" />
     <result column="type" jdbcType="INTEGER" property="type" />
-    <result column="parentId" jdbcType="INTEGER" property="parentid" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
     <result column="sort" jdbcType="INTEGER" property="sort" />
   </resultMap>
 
   <select id="queryAll" resultType="com.myc.entity.Resources">
-      	SELECT id,name,parentId,resUrl,type,sort
+      	SELECT id,name,parent_id,res_url,type,sort
 		FROM resources
 		ORDER BY sort ASC
   </select>
 
     <select id="loadUserResources" parameterType="java.util.HashMap" resultType="com.myc.entity.Resources">
-        SELECT re.id,re.name,re.parentId,re.resUrl
+        SELECT re.id,re.name,re.parent_id,re.res_url
         FROM resources re LEFT JOIN role_resources rr
-        ON re.id = rr.resourcesId
+        ON re.id = rr.resources_id
         LEFT JOIN user_role ur
-        ON rr.roleId =ur.roleId
-        WHERE ur.userId=#{userid}
+        ON rr.role_id =ur.role_id
+        WHERE ur.user_id=#{userId}
         <if test="type != null">
             AND re.type= #{type}
         </if>
@@ -34,12 +34,12 @@
     </select>
 
     <select id="queryResourcesListWithSelected" parameterType="int" resultType="com.myc.entity.Resources">
-        SELECT re.id,re.name,re.parentId,re.resUrl,re.type,
+        SELECT re.id,re.name,re.parent_id,re.res_url,re.type,
 		(CASE WHEN EXISTS(SELECT 1
-		FROM role_resources rr WHERE rr.resourcesId=re.id AND rr.roleId=#{rid})
+		FROM role_resources rr WHERE rr.resources_id=re.id AND rr.role_id=#{rid})
 		THEN 'true' ELSE 'false' END) AS checked
 		FROM resources re
-		WHERE re.parentId !=0
+		WHERE re.parent_id !=0
 		ORDER BY re.sort ASC
     </select>
 </mapper>

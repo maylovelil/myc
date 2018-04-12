@@ -5,11 +5,11 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="userId" jdbcType="INTEGER" property="userid" />
-    <result column="roleId" jdbcType="INTEGER" property="roleid" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
   </resultMap>
 
   <select id="findUserIdByRoleId" parameterType="int" resultType="int">
-    select userId from user_role where roleId =  #{roleId}
+    select user_id from user_role where role_id =  #{roleId}
   </select>
 </mapper>

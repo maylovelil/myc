@@ -39,20 +39,20 @@ public class RoleResourcesServiceImpl extends BaseServiceImpl<RoleResources> imp
         //删除
         Example example = new Example(RoleResources.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("roleid", roleResources.getRoleid());
+        criteria.andEqualTo("roleId", roleResources.getRoleId());
         mapper.deleteByExample(example);
         //添加
-        if (!StringUtils.isEmpty(roleResources.getResourcesid())) {
-            String[] resourcesArr = roleResources.getResourcesid().split(",");
+        if (!StringUtils.isEmpty(roleResources.getResourcesId())) {
+            String[] resourcesArr = roleResources.getResourcesId().split(",");
             for (String resourcesId : resourcesArr) {
                 RoleResources r = new RoleResources();
-                r.setRoleid(roleResources.getRoleid());
-                r.setResourcesid(resourcesId);
+                r.setRoleId(roleResources.getRoleId());
+                r.setResourcesId(resourcesId);
                 mapper.insert(r);
             }
         }
 
-        List<Integer> userIds = userRoleMapper.findUserIdByRoleId(roleResources.getRoleid());
+        List<Integer> userIds = userRoleMapper.findUserIdByRoleId(roleResources.getRoleId());
         //更新当前登录的用户的权限缓存
         myRealm.clearUserAuthByUserId(userIds);
 

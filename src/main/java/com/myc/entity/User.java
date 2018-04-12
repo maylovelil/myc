@@ -9,7 +9,7 @@ public class User implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String username;
+    private String userName;
 
     private String password;
 
@@ -38,18 +38,12 @@ public class User implements Serializable{
         this.id = id;
     }
 
-    /**
-     * @return username
-     */
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    /**
-     * @param username
-     */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     /**
@@ -96,7 +90,7 @@ public class User implements Serializable{
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
+                ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", enable=" + enable +
                 ", verifyCount=" + verifyCount +

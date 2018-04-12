@@ -43,8 +43,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         int page = start / length + 1;
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();
-        if (StringUtil.isNotEmpty(user.getUsername())) {
-            criteria.andLike("username", "%" + user.getUsername() + "%");
+        if (StringUtil.isNotEmpty(user.getUserName())) {
+            criteria.andLike("username", "%" + user.getUserName() + "%");
         }
         if (user.getId() != null) {
             criteria.andEqualTo("id", user.getId());
@@ -59,10 +59,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public User selectByUsername(String username) {
+    public User selectByUsername(String userName) {
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("username", username);
+        criteria.andEqualTo("userName", userName);
         List<User> userList = selectByExample(example);
         if (userList.size() > 0) {
             return userList.get(0);
@@ -72,13 +72,13 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = {Exception.class})
-    public void delUser(Integer userid) {
+    public void delUser(Integer userId) {
         //删除用户表
-        mapper.deleteByPrimaryKey(userid);
+        mapper.deleteByPrimaryKey(userId);
         //删除用户角色表
         Example example = new Example(UserRole.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("userid", userid);
+        criteria.andEqualTo("userId", userId);
         mapper.deleteByExample(example);
     }
 

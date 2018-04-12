@@ -9,12 +9,12 @@ public class Role implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "roleDesc")
+    @Column(name = "role_desc")
     private String roleDesc;
     @Transient
     private Integer selected;
 
-    @Column(name = "roleName")
+    @Column(name = "role_name")
     private String roleName;
 
     @Transient

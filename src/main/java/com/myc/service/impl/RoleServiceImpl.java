@@ -46,14 +46,14 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = {Exception.class})
-    public void delRole(Integer roleid) {
+    @Transactional(propagation = Propagation.REQUIRED, readOnly=false, rollbackFor = {Exception.class})
+    public void delRole(Integer roleId) {
         //删除角色
-        mapper.deleteByPrimaryKey(roleid);
+        mapper.deleteByPrimaryKey(roleId);
         //删除角色资源
         Example example = new Example(RoleResources.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("roleid", roleid);
+        criteria.andEqualTo("roleId", roleId);
         roleResourcesMapper.deleteByExample(example);
 
     }

@@ -18,8 +18,8 @@ public class Resources implements Serializable{
     /**
      * 资源url
      */
-    @Column(name = "resUrl")
-    private String resurl;
+    @Column(name = "res_url")
+    private String resUrl;
 
     /**
      * 资源类型   1:菜单    2：按钮
@@ -29,8 +29,8 @@ public class Resources implements Serializable{
     /**
      * 父资源
      */
-    @Column(name = "parentId")
-    private Integer parentid;
+    @Column(name = "parent_id")
+    private Integer parentId;
 
     /**
      * 排序
@@ -72,23 +72,6 @@ public class Resources implements Serializable{
     }
 
 
-    /**
-     * 获取资源url
-     *
-     * @return resUrl - 资源url
-     */
-    public String getResurl() {
-        return resurl;
-    }
-
-    /**
-     * 设置资源url
-     *
-     * @param resurl 资源url
-     */
-    public void setResurl(String resurl) {
-        this.resurl = resurl;
-    }
 
     /**
      * 获取资源类型   1:菜单    2：按钮
@@ -108,23 +91,6 @@ public class Resources implements Serializable{
         this.type = type;
     }
 
-    /**
-     * 获取父资源
-     *
-     * @return parentId - 父资源
-     */
-    public Integer getParentid() {
-        return parentid;
-    }
-
-    /**
-     * 设置父资源
-     *
-     * @param parentid 父资源
-     */
-    public void setParentid(Integer parentid) {
-        this.parentid = parentid;
-    }
 
     /**
      * 获取排序
@@ -152,15 +118,19 @@ public class Resources implements Serializable{
         this.checked = checked;
     }
 
-    @Override
-    public String toString() {
-        return "Resources{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", resurl='" + resurl + '\'' +
-                ", type=" + type +
-                ", parentid=" + parentid +
-                ", sort=" + sort +
-                '}';
+    public String getResUrl() {
+        return resUrl;
+    }
+
+    public void setResUrl(String resUrl) {
+        this.resUrl = resUrl;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

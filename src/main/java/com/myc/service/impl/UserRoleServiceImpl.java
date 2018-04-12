@@ -29,19 +29,19 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole> implements Us
         //删除
         Example example = new Example(UserRole.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("userid", userId);
+        criteria.andEqualTo("userId", userId);
         mapper.deleteByExample(example);
         //添加
         String[] rds = roleIds.split(",");
         for (String roleId : rds) {
             UserRole u = new UserRole();
-            u.setUserid(userId);
-            u.setRoleid(Integer.valueOf(roleId));
+            u.setUserId(userId);
+            u.setRoleId(Integer.valueOf(roleId));
             mapper.insert(u);
         }
         //更新当前登录的用户的权限缓存
-        List<Integer> userid = new ArrayList<Integer>();
-        userid.add(userId);
-        myRealm.clearUserAuthByUserId(userid);
+        List<Integer> userIds = new ArrayList<>();
+        userIds.add(userId);
+        myRealm.clearUserAuthByUserId(userIds);
     }
 }

@@ -98,8 +98,9 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         if(CommonUtils.isAjax(request)){
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
-            Map<String,Integer> stringMap = Maps.newHashMap();
+            Map<String,Object> stringMap = Maps.newHashMap();
             stringMap.put("status",HttpStatus.UNAUTHORIZED.value());
+            stringMap.put("message","权限失效，请重新登录");
             response.getWriter().write(JSONObject.toJSONString(stringMap));
         }else{
             WebUtils.issueRedirect(request, response,this.getLoginUrl());

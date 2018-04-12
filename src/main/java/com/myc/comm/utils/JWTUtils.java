@@ -34,7 +34,7 @@ public class JWTUtils {
         try {
             Algorithm algorithm = Algorithm.HMAC256(user.getPassword());
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withClaim("username", user.getUsername())
+                    .withClaim("userName", user.getUserName())
                     .withClaim("userId",String.valueOf(user.getId()))
                     .withClaim("user",JSONObject.toJSONString(user))
                     .build();
@@ -52,7 +52,7 @@ public class JWTUtils {
     public static String getUsername(String jwtToken) {
         try {
             DecodedJWT jwt = JWT.decode(jwtToken);
-            return jwt.getClaim("username").asString();
+            return jwt.getClaim("userName").asString();
         } catch (JWTDecodeException e) {
             return null;
         }
@@ -95,7 +95,7 @@ public class JWTUtils {
             Algorithm algorithm = Algorithm.HMAC256(user.getPassword());
             // 附带username信息
             return JWT.create()
-                    .withClaim("username", user.getUsername())
+                    .withClaim("userName", user.getUserName())
                     //这里保存的所有信息全部使用String类型，否者在获取的时候asString处理错误
                     .withClaim("userId",String.valueOf(user.getId()))
                     .withClaim("user",JSONObject.toJSONString(user))

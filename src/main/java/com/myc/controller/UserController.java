@@ -9,7 +9,6 @@ import com.myc.comm.constans.RoleCons;
 import com.myc.comm.utils.ResultUtils;
 import com.myc.dto.UserDto;
 import com.myc.service.UserService;
-import com.myc.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.Logical;
@@ -18,10 +17,12 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @Description:
@@ -55,7 +56,8 @@ public class UserController {
     @ApiOperation(value = "获取所有的用户信息", notes = "参数描述", code = 200, produces = "application/json")
     @PostMapping(value = "ajaxList")
     @Transactional(readOnly = true)
-    public @ResponseBody ResultPage getAjaxList(Model model, UserDto userDto) {
+    public @ResponseBody
+    ResultPage getAjaxList(Model model, UserDto userDto) {
         PageInfo pageInfo = userService.selectAllUserVoForPage(userDto);
         return ResultPage.sendOk(pageInfo);
     }

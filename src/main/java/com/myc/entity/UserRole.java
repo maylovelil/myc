@@ -6,31 +6,25 @@ import java.io.Serializable;
 @Table(name = "user_role")
 public class UserRole implements Serializable{
     private static final long serialVersionUID = -916411139749530670L;
-    @Column(name = "userId")
-    private Integer userid;
+    @Column(name = "user_id")
+    private Integer userId;
 
-    @Column(name = "roleId")
-    private Integer roleid;
+    @Column(name = "role_id")
+    private Integer roleId;
 
-    /**
-     * @return userId
-     */
-    public Integer getUserid() {
-        return userid;
+    public Integer getUserId() {
+        return userId;
     }
 
-    /**
-     * @param userid
-     */
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public Integer getRoleid() {
-        return roleid;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setRoleid(Integer roleid) {
-        this.roleid = roleid;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 }
